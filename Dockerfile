@@ -1,9 +1,5 @@
-# Use official Python image
-FROM python:3.11-slim
-
-# Prevent Python from writing .pyc files
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# Use Python 3.13 base image
+FROM python:3.13-slim
 
 # Set working directory inside container
 WORKDIR /app
@@ -12,11 +8,16 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all the app files into the container
+# Copy the rest of the application
 COPY . .
 
-# Expose the port the app runs on
+# Set environment variables
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=5000
+
+# Expose port
 EXPOSE 5000
 
-# Command to run the app
-CMD ["python", "app.py"]
+# Run the Flask app
+CMD ["flask", "run"]
